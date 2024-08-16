@@ -15,7 +15,7 @@ Install MinGW, OpenSSL, and osslsigncode using the following command:
 
 ```
 sudo apt update
-sudo apt install gcc-mingw-w64-x86-64 
+sudo apt install gcc-mingw-w64-x86-64 openssl osslsigncode
 ```
 
 ## Installing Required Go Libraries
@@ -49,6 +49,58 @@ To build the application for Windows on Ubuntu, follow these steps:
    ```
 
    This will produce the `ArishtiOverflow.exe` executable file for Windows.
+
+--- 
+
+# Signing the application [Optional] 
+
+## Signing the Executable with a Self-Signed Certificate
+
+### Step 1: Generate a Self-Signed Certificate
+Generate a Private Key:
+
+```
+openssl genrsa -out myPrivateKey.key 2048
+```
+
+
+### Generate a Self-Signed Certificate:
+
+```
+openssl req -x509 -new -key myPrivateKey.key -out myCert.pem -days 365
+
+```
+
+### Convert the Certificate and Key to PKCS12 Format:
+
+```
+openssl pkcs12 -export -in myCert.pem -inkey myPrivateKey.key -out myCert.p12 -name "MySelfSignedCert"
+```
+
+##### You will be prompted to create a password for the .p12 file.
+
+### Step 2: Sign the Executable
+
+With the .p12 certificate file ready, sign the executable using osslsigncode:
+
+```
+osslsigncode sign -pkcs12 myCert.p12 -pass <password> -n "ArishtiOverflow" -i "https://yourdomain.com" -in ArishtiOverflow.exe -out ArishtiOverflow-signed.exe
+```
+
+> Replace <password> with the password you used when creating the .p12 file. This will produce a signed version of your executable (ArishtiOverflow-signed.exe).
+
+
+### Step 3: Verify the Signature
+After signing, you can verify the signature with the following command:
+
+```
+osslsigncode verify -in ArishtiOverflow-signed.exe
+
+```
+
+### Running the Application
+
+Once built and signed, you can distribute and run the ArishtiOverflow-signed.exe on Windows. Since this is a self-signed certificate, Windows may prompt users with a security warning.
 
 
 
