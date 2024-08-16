@@ -38,7 +38,7 @@ To build the application for Windows on Ubuntu, follow these steps:
    export CXX=x86_64-w64-mingw32-g++
    ```
 
-   Or use the file `exportVar.sh` to export all vars automatically. 
+   Or use the file `build.sh` to export all vars automatically.
 
 2. **Build the Application:**
 
