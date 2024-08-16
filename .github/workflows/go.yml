@@ -40,8 +40,6 @@ jobs:
       run: |
         $TAG_NAME = "v1.0.${{ github.run_number }}"
         echo "TAG_NAME=$TAG_NAME" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
-        echo "::set-output name=tag::$TAG_NAME"
-      shell: pwsh
 
     - name: Create GitHub Release
       id: create_release
@@ -49,8 +47,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.generate_tag.outputs.tag }}
-        release_name: "Release ${{ steps.generate_tag.outputs.tag }}"
+        tag_name: ${{ env.TAG_NAME }}
+        release_name: "Release ${{ env.TAG_NAME }}"
         draft: false
         prerelease: false
 
