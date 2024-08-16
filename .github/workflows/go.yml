@@ -38,12 +38,9 @@ jobs:
     - name: Generate Tag
       id: generate_tag
       run: |
-        echo "v1.0.${{ github.run_number }}" > tag.txt
-      continue-on-error: false
-
-    - name: Read tag from file
-      id: read_tag
-      run: echo "tag=$(cat tag.txt)" >> $GITHUB_ENV
+        TAG_NAME="v1.0.${{ github.run_number }}"
+        echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+        echo "::set-output name=tag::${TAG_NAME}"
 
     - name: Create GitHub Release
       id: create_release
@@ -51,8 +48,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.tag }}
-        release_name: "Release ${{ env.tag }}"
+        tag_name: ${{ steps.generate_tag.outputs.tag }}
+        release_name: "Release ${{ steps.generate_tag.outputs.tag }}"
         draft: false
         prerelease: false
 
