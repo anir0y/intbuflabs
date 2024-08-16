@@ -38,7 +38,7 @@ jobs:
     - name: Generate Tag
       id: generate_tag
       run: |
-        echo ::set-output name=tag::v1.0.${{ github.run_number }}
+        echo "tag=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
 
     - name: Create GitHub Release
       id: create_release
@@ -46,8 +46,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.generate_tag.outputs.tag }}
-        release_name: "Release ${{ steps.generate_tag.outputs.tag }}"
+        tag_name: ${{ env.tag }}
+        release_name: "Release ${{ env.tag }}"
         draft: false
         prerelease: false
 
