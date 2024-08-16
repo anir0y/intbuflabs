@@ -35,14 +35,19 @@ jobs:
         name: ArishtiOverflow-windows-amd64
         path: ArishtiOverflow-windows-amd64.exe
 
+    - name: Generate Tag
+      id: generate_tag
+      run: |
+        echo ::set-output name=tag::v1.0.${{ github.run_number }}
+
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.sha }}
-        release_name: "Release ${{ github.sha }}"
+        tag_name: ${{ steps.generate_tag.outputs.tag }}
+        release_name: "Release ${{ steps.generate_tag.outputs.tag }}"
         draft: false
         prerelease: false
 
