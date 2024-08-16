@@ -10,13 +10,8 @@ on:
 
 jobs:
   build:
-    name: Build Go Application
+    name: Build Go Application for Windows x64
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        goos: [linux, windows, darwin]
-        goarch: [amd64, arm64]
 
     steps:
     - name: Checkout code
@@ -33,19 +28,19 @@ jobs:
         path: |
           ~/.cache/go-build
           ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ matrix.goos }}-${{ matrix.goarch }}-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-go-windows-amd64-${{ hashFiles('**/go.sum') }}
         restore-keys: |
-          ${{ runner.os }}-go-${{ matrix.goos }}-${{ matrix.goarch }}-
+          ${{ runner.os }}-go-windows-amd64-
 
     - name: Install dependencies
       run: go mod tidy
 
-    - name: Build
+    - name: Build for Windows x64
       run: |
-        GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-H windowsgui" -o ArishtiOverflow-${{ matrix.goos }}-${{ matrix.goarch }}
+        GOOS=windows GOARCH=amd64 go build -ldflags="-H windowsgui" -o ArishtiOverflow-windows-amd64.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ArishtiOverflow-${{ matrix.goos }}-${{ matrix.goarch }}
-        path: ArishtiOverflow-${{ matrix.goos }}-${{ matrix.goarch }}
+        name: ArishtiOverflow-windows-amd64
+        path: ArishtiOverflow-windows-amd64.exe
