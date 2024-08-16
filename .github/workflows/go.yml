@@ -38,7 +38,12 @@ jobs:
     - name: Generate Tag
       id: generate_tag
       run: |
-        echo "tag=v1.0.${{ github.run_number }}" >> $GITHUB_ENV
+        echo "v1.0.${{ github.run_number }}" > tag.txt
+      continue-on-error: false
+
+    - name: Read tag from file
+      id: read_tag
+      run: echo "tag=$(cat tag.txt)" >> $GITHUB_ENV
 
     - name: Create GitHub Release
       id: create_release
