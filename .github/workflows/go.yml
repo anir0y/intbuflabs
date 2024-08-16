@@ -52,8 +52,7 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-      env:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}  # Pass the token explicitly in the `with` block
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
